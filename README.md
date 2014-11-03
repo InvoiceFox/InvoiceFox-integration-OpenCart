@@ -12,6 +12,9 @@ The first alpha version.
 * Copy files with full paths to OpenCart root folder
 * Go to *ADMINISTRATION > Extensions > Modules* and press Install at *InvoiceFox Mod*.
 * Edit the $CONF in the ./admin/model/invoicefox/hooks.php. You get your API key in InvoiceFox/Čebelca.biz under *Access/Dostop*.
+
+* To create invoice go to *Admin > Sales > Orders > View (at a specified order) > History" and set order status to "Complete". 
+  The invoice will be created and comment about this will be added to history.
  
 ###Where does this work
 

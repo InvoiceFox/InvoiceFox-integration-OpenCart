@@ -7,8 +7,6 @@
 */
 
 // Status: Alpha
-// contact: janko.itm@gmail.com
-// www.cebelca.biz
 
 //ini_set('display_errors', 1);
 //error_reporting(E_ALL ^ E_NOTICE);
@@ -33,10 +31,10 @@ class ModelInvoiceFoxHooks extends Model {
 
 
     $this->CONF = array(
-			'API_KEY'=>"--YOUR--API--KEY--", // you get it in InvoiceFox/Cebelca/Abelie/..., on page "access" after you activate the API
+			'API_KEY'=>"59zt*******************************akb8r", // you get it in InvoiceFox/Cebelca/Abelie/..., on page "access" after you activate the API
 			'API_DOMAIN'=>"www.cebelca.biz", // options: "www.invoicefox.com" "www.invoicefox.co.uk" "www.invoicefox.com.au" "www.cebelca.biz" "www.abelie.biz" 
 			'APP_NAME'=>"Cebelca.biz",
-			'document_to_make'=>"invoice", // options: "invoice" "proforma"
+			'document_to_make'=>"invoice", // options: "invoice" "proforma" "inventory"
 			'proforma_days_valid'=>10,
 			'customer_general_payment_period'=>5,
 			'add_post_content_in_item_descr'=>false,
@@ -55,6 +53,7 @@ class ModelInvoiceFoxHooks extends Model {
   }
   
   public function changeOrderStatusHook($status_id, $comment, $order_id) {
+    $newComment = '';
     error_log("IN ORDER STATUS HOOK", E_USER_ERROR);
 
     $this->load->model('localisation/order_status');
@@ -62,14 +61,16 @@ class ModelInvoiceFoxHooks extends Model {
     $order_status_info = $this->model_localisation_order_status->getOrderStatus($status_id);
     if ($order_status_info){ $data['order_status'] = $order_status_info['name']; } else { $data['order_status'] = ''; }
     
-    opencart_invfox__trace($data['order_status']."??????????????????????????????????????????????????????????????????????????????????????????");
+    opencart_invfox__trace($data['order_status']);
 
     if ($data['order_status'] == $this->CONF['create_invfox_document_on_status']) {
       
-      $order_data = $this->getOrderData($order_id);
+      $newComment = $this->makeInvoiceFromOrder($order_id);
       
       error_log("IN ORDER STATUS HOOK END", E_USER_ERROR);
     }
+
+    return $comment.($comment?"\n\n":"").$newComment;
   }
 
   public function getLanguageDirectory() {
@@ -110,10 +111,11 @@ class ModelInvoiceFoxHooks extends Model {
     }
   }
   
-  private function getOrderData($order_id) {
+  private function makeInvoiceFromOrder($order_id) {
 
-    print_r($this->CONF);
+    //// print_r($this->CONF);
 
+    $comment = '';
 
     $data = array();
     
@@ -151,6 +153,8 @@ class ModelInvoiceFoxHooks extends Model {
       
       if ($r->isOk()) {
     
+	$comment .= "- contact added\n";
+
 	opencart_invfox__trace("============ INVFOX::before create invoice ============");
       
 	$clientIdA = $r->getData();
@@ -230,9 +234,8 @@ class ModelInvoiceFoxHooks extends Model {
 				  );
 	if ($r2->isOk()) {    
 	  $invA = $r2->getData();
-	  //$order->add_order_note("Invoice No. {$invA[0]['title']} was created at {$this->CONF['APP_NAME']}.",'woocom-invfox');
+	  $comment .= "- invoice # {$invA[0]['title']} was created at {$this->CONF['APP_NAME']}.";
 	} 
-	// TODO ... add notification / alert in case of erro
 
       } elseif ($this->CONF['document_to_make'] == 'proforma') {
 	$r2 = $api->createProFormaInvoice(
@@ -245,6 +248,10 @@ class ModelInvoiceFoxHooks extends Model {
 						),
 					  $body2
 					  );
+	if ($r2->isOk()) {    
+	  $invA = $r2->getData();
+	  $comment .= "- pro forma invoice # {$invA[0]['title']} was created at {$this->CONF['APP_NAME']}.";
+	} 
 
       } elseif ($this->CONF['document_to_make'] == 'inventory') {
 	$r2 = $api->createProFormaInvoice(
@@ -259,14 +266,14 @@ class ModelInvoiceFoxHooks extends Model {
 					  );
 	if ($r2->isOk()) {    
 	  $invA = $r2->getData();
-	  //$order->add_order_note("ProForma Invoice No. {$invA[0]['title']} was created at {$this->CONF['APP_NAME']}.",'woocom-invfox');
+	  $comment .= "- inventory sale document # {$invA[0]['title']} was created at {$this->CONF['APP_NAME']}.";
 	} 
       }
       opencart_invfox__trace($r2);
       opencart_invfox__trace("============ INVFOX::after create invoice ============");
     }
     
-    return true;
+    return $comment;
   }
 
   private function findShipping($totals) {

@@ -10,30 +10,45 @@
 				]]>
 			</search>
 			<add trim="true"><![CDATA[
-                            <?php echo $text_footer; ?> - <a href="">InvoiceFox Mod</a>
-				]]>
+			<?php echo $text_footer; ?> - <a href="">InvoiceFox Mod</a>
+			]]>
 			</add>
 		</operation>
 	</file>
-        <file name="admin/controller/sale/order.php" error="skip"> <!-- LOOKS LIKE ORDER STATUS CHANGE HOOK HERE - JM JANKO -->
-                <operation error="skip">
-			<search position="after"><![CDATA[
-			        $this->model_sale_order->addOrderHistory($this->request->get['order_id'], $this->request->post);
-				]]>
-			</search>
+	<file name="admin/controller/sale/order.php" error="skip"> <!-- LOOKS LIKE ORDER STATUS CHANGE HOOK HERE - JM JANKO -->
+	  <operation error="skip">
+	    <search position="before"><![CDATA[
+	    $this->model_sale_order->addOrderHistory($this->request->get['order_id'], $this->request->post);
+	    ]]>
+	    </search>
 			<add trim="false"><![CDATA[                          
                                     if(file_exists("model/invoicefox/hooks.php"))
                                     {                          
                                         require_once("model/invoicefox/hooks.php");
                                         $hooks = new ModelInvoiceFoxHooks( $this->registry );
-                                        //require_once($hooks->getLanguageDirectory());
-                                        $hooks->changeOrderStatusHook($this->request->post["order_status_id"], $this->request->post["comment"], $this->request->get["order_id"]);
+                                        $this->request->post["comment"] = $hooks->changeOrderStatusHook($this->request->post["order_status_id"], $this->request->post["comment"], $this->request->get["order_id"]);
                                     }
 				]]>
 			</add>
 		</operation>
         </file>   
-
+	<!--file name="admin/model/sale/order.php" error="skip">
+	  <operation error="skip">
+	    <search position="after"><![CDATA[
+	    public function editOrder($order_id, $data) {
+	    ]]>
+	    </search>
+	                 <add trim="false"><![CDATA[                          
+			            if(file_exists("model/invoicefox/hooks.php"))
+                                    {                          
+                                        require_once("model/invoicefox/hooks.php");
+                                        $hooks = new ModelInvoiceFoxHooks( $this->registry );
+                                        $data["comment"] = $hooks->changeOrderStatusHook($data["order_status_id"], $data["comment"], $order_id);
+                                    }
+				    ]]>
+			</add>
+		</operation>
+        </file-->
         <!--file name="admin/controller/catalog/product.php" error="skip">
 		<operation error="skip">
 			<search position="before"><![CDATA[

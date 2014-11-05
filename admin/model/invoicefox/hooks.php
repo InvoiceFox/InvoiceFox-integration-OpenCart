@@ -214,7 +214,7 @@ class ModelInvoiceFoxHooks extends Model {
 
       // TODO -- it can make it's own INVOICENUMS OR INVFOX CAN MAKE THEM
 
-      $invoice_no = $this->CONF['use_shop_document_numbers'] ? $order['invoice_prefix'] . $order['order_id'] : '';
+      $invoice_no = $this->CONF['use_shop_document_numbers'] ? $order['invoice_prefix'] . $order['order_id'] : '-';
 
       opencart_invfox__trace($invoice_no);
       

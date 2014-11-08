@@ -15,17 +15,20 @@ The first alpha version.
 
 * To create invoice go to *Admin > Sales > Orders > View (at a specified order) > History" and set order status to "Complete". 
   The invoice will be created and comment about this will be added to history.
- 
+
+###Config notes
+
+* To get the Warehouse ID (in case you create Inventory sales documents out of orders) go to InvoiceFox/Cebelca > Inventory > Warehouses and click on Inventory/Zaloga at selected warehouse. Look at and URL where ?wh=X (where X is warehouse id)
+
 ###Where does this work
 
 http://www.invoicefox.com , http://www.cebelca.biz , www.invoicefox.co.nz , www.invoicefox.com.au , www.abelie.biz
 
-###TODO
+###Feature requests
 
-* overall improvements and testing
-* Make admin interface for seting the config (vs. the file now)
-* Add functionality and options to download the PDF of invoice or send it via email.
+Email me at janko.itm@gmail.com
 
 ###License
 
 GNU GPL v2
+

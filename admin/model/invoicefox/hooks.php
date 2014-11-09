@@ -32,7 +32,7 @@ class ModelInvoiceFoxHooks extends Model {
 
     $this->CONF = array(
 			// you get it in InvoiceFox/Cebelca/Abelie/..., on page "access" after you activate the API
-			'API_KEY'=>"59zte8jmvrhs9dln775su210rtx4w2eoicfakb8r",
+			'API_KEY'=>"59z**********************************b8r",
 			// options: "www.invoicefox.com" "www.invoicefox.co.uk" "www.invoicefox.com.au" "www.cebelca.biz" "www.abelie.biz" 
 			'API_DOMAIN'=>"www.cebelca.biz", 
 			'APP_NAME'=>"Cebelca.biz",

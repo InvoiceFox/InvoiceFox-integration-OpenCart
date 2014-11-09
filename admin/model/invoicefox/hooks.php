@@ -23,12 +23,10 @@ class ModelInvoiceFoxHooks extends Model {
   public function __construct($registry)
   {
     parent::__construct($registry);
-    
 
 
-    // THE MYCONFIGURATION TODO --- move to class
 
-
+    // THE MYCONFIGURATION
 
     $this->CONF = array(
 			// you get it in InvoiceFox/Cebelca/Abelie/..., on page "access" after you activate the API

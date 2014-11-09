@@ -28,6 +28,7 @@ The first alpha version.
 ###Creating the the inventory sales document
 
 * To get the Warehouse ID (in case you create Inventory sales documents out of orders) go to InvoiceFox/Cebelca > Inventory > Warehouses and click on Inventory/Zaloga at selected warehouse. Look at and URL where ?wh=X (where X is warehouse id)
+* The program finds items on the document based on product SKU in OpenCart.
 
 ###Creating the proforma invoice
 

@@ -15,106 +15,270 @@
     </div>
     <div class="content">
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
-        <table id="module" class="list">
-          <thead>
-            <tr>
-              <td class="left"><?php echo $entry_layout; ?></td>
-            <td class="left"><?php echo $entry_position; ?></td>
-            <td class="left"><?php echo $entry_status; ?></td>
-            <td class="right"><?php echo $entry_sort_order; ?></td>
-              <td></td>
-            </tr>
-          </thead>
-          <?php $module_row = 0; ?>
-          <?php foreach ($modules as $module) { ?>
-          <tbody id="module-row<?php echo $module_row; ?>">
-            <tr>
-              <td class="left"><select name="helloworld_module[<?php echo $module_row; ?>][layout_id]">
-                  <?php foreach ($layouts as $layout) { ?>
-                  <?php if ($layout['layout_id'] == $module['layout_id']) { ?>
-                  <option value="<?php echo $layout['layout_id']; ?>" selected="selected"><?php echo $layout['name']; ?></option>
-                  <?php } else { ?>
-                  <option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>
-                  <?php } ?>
-                  <?php } ?>
-                </select></td>
-              <td class="left"><select name="helloworld_module[<?php echo $module_row; ?>][position]">
-                  <?php if ($module['position'] == 'content_top') { ?>
-                  <option value="content_top" selected="selected"><?php echo $text_content_top; ?></option>
-                  <?php } else { ?>
-                  <option value="content_top"><?php echo $text_content_top; ?></option>
-                  <?php } ?>
-                  <?php if ($module['position'] == 'content_bottom') { ?>
-                  <option value="content_bottom" selected="selected"><?php echo $text_content_bottom; ?></option>
-                  <?php } else { ?>
-                  <option value="content_bottom"><?php echo $text_content_bottom; ?></option>
-                  <?php } ?>
-                  <?php if ($module['position'] == 'column_left') { ?>
-                  <option value="column_left" selected="selected"><?php echo $text_column_left; ?></option>
-                  <?php } else { ?>
-                  <option value="column_left"><?php echo $text_column_left; ?></option>
-                  <?php } ?>
-                  <?php if ($module['position'] == 'column_right') { ?>
-                  <option value="column_right" selected="selected"><?php echo $text_column_right; ?></option>
-                  <?php } else { ?>
-                  <option value="column_right"><?php echo $text_column_right; ?></option>
-                  <?php } ?>
-                </select></td>
-              <td class="left"><select name="helloworld_module[<?php echo $module_row; ?>][status]">
-                  <?php if ($module['status']) { ?>
-                  <option value="1" selected="selected"><?php echo $text_enabled; ?></option>
-                  <option value="0"><?php echo $text_disabled; ?></option>
-                  <?php } else { ?>
-                  <option value="1"><?php echo $text_enabled; ?></option>
-                  <option value="0" selected="selected"><?php echo $text_disabled; ?></option>
-                  <?php } ?>
-                </select></td>
-              <td class="right"><input type="text" name="helloworld_module[<?php echo $module_row; ?>][sort_order]" value="<?php echo $module['sort_order']; ?>" size="3" /></td>
-              <td class="left"><a onclick="$('#module-row<?php echo $module_row; ?>').remove();" class="button"><span><?php echo $button_remove; ?></span></a></td>
-            </tr>
-          </tbody>
-          <?php $module_row++; ?>
-          <?php } ?>
-          <tfoot>
-            <tr>
-              <td colspan="4"></td>
-              <td class="left"><a onclick="addModule();" class="button"><span><?php echo $button_add_module; ?></span></a></td>
-            </tr>
-          </tfoot>
+         <table class="form">
+
+	 <tr>
+            <td><?php echo $entry_api_key; ?></td>
+            <td><input type="text" name="invoicefox_api_key" value="<?php echo $invoicefox_api_key; ?>" />
+	    <?php if ($error_api_key) { ?>
+              <span class="error"><?php echo $error_api_key; ?></span>
+              <?php } ?>
+	    </td>
+          </tr>
+	 <!-- v10agsuec8n97rcv4re81hdmf0idy2p673b6tt4l ww2-->
+	 <!-- 1hy7dcnlq640a7e08xi9ssz3wkegr4g6r52amso2 -->
+	  <tr>
+            <td><?php echo $entry_api_domain; ?></td>
+            <td><select name="invoicefox_api_domain">
+                  <?php if($invoicefox_api_domain=='www.invoicefox.com') :?>
+			<option selected="selected" value="www.invoicefox.com">www.invoicefox.com</option>
+		  <?php else : ?>
+			<option value="www.invoicefox.com">www.invoicefox.com</option>
+		  <?php endif;?>
+
+		  <?php if($invoicefox_api_domain=='www.invoicefox.co.uk') :?>
+			<option selected="selected" value="www.invoicefox.co.uk">www.invoicefox.co.uk</option>
+		  <?php else : ?>
+			<option value="www.invoicefox.co.uk">www.invoicefox.co.uk</option>
+		  <?php endif;?>
+
+		  <?php if($invoicefox_api_domain=='www.invoicefox.com.au') :?>
+			<option selected="selected" value="www.invoicefox.com.au">www.invoicefox.com.au</option>
+		  <?php else : ?>
+			<option value="www.invoicefox.com.au">www.invoicefox.com.au</option>
+		  <?php endif;?>
+
+		  <?php if($invoicefox_api_domain=='www.cebelca.biz') :?>
+			<option selected="selected" value="www.cebelca.biz">www.cebelca.biz</option>
+		  <?php else : ?>
+			<option value="www.cebelca.biz">www.cebelca.biz</option>
+		  <?php endif;?>
+
+		  <?php if($invoicefox_api_domain=='ww2.cebelca.biz') :?>
+			<option selected="selected" value="ww2.cebelca.biz">ww2.cebelca.biz</option>
+		  <?php else : ?>
+			<option value="ww2.cebelca.biz">ww2.cebelca.biz</option>
+		  <?php endif;?>
+
+
+		 
+
+		  <?php if($invoicefox_api_domain=='www.abelie.biz') :?>
+			<option selected="selected" value="www.abelie.biz">www.abelie.biz</option>
+		  <?php else : ?>
+			<option value="www.abelie.biz">www.abelie.biz</option>
+		  <?php endif;?>
+
+                </select>
+	    </td>
+          </tr>
+
+          <tr>
+            <td><?php echo $entry_app_name; ?></td>
+            <td><input type="text" name="invoicefox_app_name" value="<?php echo $invoicefox_app_name; ?>" />
+	    <?php if ($error_app_name) { ?>
+              <span class="error"><?php echo $error_app_name; ?></span>
+              <?php } ?>
+	    </td>
+          </tr>
+
+	  <tr>
+            <td><?php echo $entry_document_to_make; ?></td>
+            <td><select name="invoicefox_document_to_make">
+                  <?php if($invoicefox_document_to_make=='invoice') :?>
+			<option selected="selected" value="invoice">invoice</option>
+		  <?php else : ?>
+			<option value="invoice">invoice</option>
+		  <?php endif;?>
+
+		  <?php if($invoicefox_document_to_make=='proforma') :?>
+			<option selected="selected" value="proforma">proforma</option>
+		  <?php else : ?>
+			<option value="proforma">proforma</option>
+		  <?php endif;?>
+		  
+		  <?php if($invoicefox_document_to_make=='inventory') :?>
+			<option selected="selected" value="inventory">inventory</option>
+		  <?php else : ?>
+			<option value="inventory">inventory</option>
+		  <?php endif;?>
+
+		  
+                </select>
+	    </td>
+          </tr>
+	
+	  <tr>
+            <td><?php echo $entry_proforma_days_valid; ?></td>
+            <td><input type="text" name="invoicefox_proforma_days_valid" value="<?php echo $invoicefox_proforma_days_valid; ?>" />
+	    <?php if ($error_proforma_days_valid) { ?>
+              <span class="error"><?php echo $error_proforma_days_valid; ?></span>
+              <?php } ?>
+	    </td>
+          </tr>
+	  
+	  <tr>
+            <td><?php echo $entry_customer_general_payment_period; ?></td>
+            <td><input type="text" name="invoicefox_customer_general_payment_period" value="<?php echo $invoicefox_customer_general_payment_period; ?>" />
+	    <?php if ($error_customer_general_payment_period) { ?>
+              <span class="error"><?php echo $error_customer_general_payment_period; ?></span>
+              <?php } ?>
+	    </td>
+          </tr>
+	  <!--
+	  <tr>
+            <td><?php echo $entry_add_post_content_in_item_descr; ?></td>
+            <td><select name="invoicefox_add_post_content_in_item_descr">
+                  <?php if($invoicefox_add_post_content_in_item_descr==='1') :?>
+			<option selected="selected" value="1">true</option>
+		  <?php else : ?>
+			<option value="1">true</option>
+		  <?php endif;?>
+
+		  <?php if($invoicefox_add_post_content_in_item_descr==='0') :?>
+			<option selected="selected" value="0">false</option>
+		  <?php else : ?>
+			<option value="0">false</option>
+		  <?php endif;?>
+
+		  
+                </select>
+	    </td>
+          </tr>
+	  -->
+	  <tr>
+            <td><?php echo $entry_display_partial_sum_label; ?></td>
+            <td><select name="invoicefox_display_partial_sum_label">
+                  <?php if($invoicefox_display_partial_sum_label==='1') :?>
+			<option selected="selected" value="1">true</option>
+		  <?php else : ?>
+			<option value="1">true</option>
+		  <?php endif;?>
+
+		  <?php if($invoicefox_display_partial_sum_label==='0') :?>
+			<option selected="selected" value="0">false</option>
+		  <?php else : ?>
+			<option value="0">false</option>
+		  <?php endif;?>
+
+		  
+                </select>
+	    </td>
+          </tr>
+	  
+	  <tr>
+            <td><?php echo $entry_partial_sum_label; ?></td>
+            <td><input type="text" name="invoicefox_partial_sum_label" value="<?php echo $invoicefox_partial_sum_label; ?>" />
+	    <?php if ($error_partial_sum_label) { ?>
+              <span class="error"><?php echo $error_partial_sum_label; ?></span>
+              <?php } ?>
+	    </td>
+          </tr>
+
+	  <tr>
+            <td><?php echo $entry_display_product_option_label; ?></td>
+            <td><select name="invoicefox_display_product_option_label">
+                  <?php if($invoicefox_display_product_option_label==='1') :?>
+			<option selected="selected" value="1">true</option>
+		  <?php else : ?>
+			<option value="1">true</option>
+		  <?php endif;?>
+
+		  <?php if($invoicefox_display_product_option_label==='0') :?>
+			<option selected="selected" value="0">false</option>
+		  <?php else : ?>
+			<option value="0">false</option>
+		  <?php endif;?>
+
+		  
+                </select>
+	    </td>
+          </tr>
+	  
+	  
+	  <tr>
+            <td><?php echo $entry_round_calculated_taxrate_to; ?></td>
+            <td><input type="text" name="invoicefox_round_calculated_taxrate_to" value="<?php echo $invoicefox_round_calculated_taxrate_to; ?>" />
+	    </td>
+          </tr>
+
+	  <tr>
+            <td><?php echo $entry_round_calculated_netprice_to; ?></td>
+            <td><input type="text" name="invoicefox_round_calculated_netprice_to" value="<?php echo $invoicefox_round_calculated_netprice_to; ?>" />
+	    </td>
+          </tr>
+	  
+	  <tr>
+            <td><?php echo $entry_from_warehouse_id; ?></td>
+            <td><input type="text" name="invoicefox_from_warehouse_id" value="<?php echo $invoicefox_from_warehouse_id; ?>" />
+	    </td>
+          </tr>
+
+	  <tr>
+            <td><?php echo $entry_tax_rate_on_shipping; ?></td>
+            <td><input type="text" name="invoicefox_tax_rate_on_shipping" value="<?php echo $invoicefox_tax_rate_on_shipping; ?>" />
+	    </td>
+          </tr>
+
+	  <tr>
+            <td><?php echo $entry_use_shop_document_numbers; ?></td>
+            <td><select name="invoicefox_use_shop_document_numbers">
+                  <?php if($invoicefox_use_shop_document_numbers==='1') :?>
+			<option selected="selected" value="1">true</option>
+		  <?php else : ?>
+			<option value="1">true</option>
+		  <?php endif;?>
+
+		  <?php if($invoicefox_use_shop_document_numbers==='0') :?>
+			<option selected="selected" value="0">false</option>
+		  <?php else : ?>
+			<option value="0">false</option>
+		  <?php endif;?>
+
+		  
+                </select>
+	    </td>
+          </tr>
+
+	   <tr>
+            <td><?php echo $entry_create_invfox_document_on_status; ?></td>
+            <td><select name="invoicefox_create_invfox_document_on_status">
+                  <?php foreach($order_statuses as $order_statuse) :?>
+		  <?php if($invoicefox_create_invfox_document_on_status==$order_statuse['name']) :?>
+			<option selected="selected" value="<?php echo $order_statuse['name'];?>"><?php echo $order_statuse['name'];?></option>
+		  <?php else : ?>
+			<option value="<?php echo $order_statuse['name'];?>"><?php echo $order_statuse['name'];?></option>
+		  <?php endif;?>
+		  <?php endforeach;?>
+
+		  
+                </select>
+	    </td>
+          </tr>
+
+	  <tr>
+            <td><?php echo $entry_close_invfox_document_on_status; ?></td>
+            <td><select name="invoicefox_close_invfox_document_on_status">
+                  <?php foreach($order_statuses as $order_statuse) :?>
+		  <?php if($invoicefox_close_invfox_document_on_status==$order_statuse['name']) :?>
+			<option selected="selected" value="<?php echo $order_statuse['name'];?>"><?php echo $order_statuse['name'];?></option>
+		  <?php else : ?>
+			<option value="<?php echo $order_statuse['name'];?>"><?php echo $order_statuse['name'];?></option>
+		  <?php endif;?>
+		  <?php endforeach;?>
+
+		  
+                </select>
+	    </td>
+          </tr>
+
+
         </table>
       </form>
     </div>
   </div>
 </div>
 <script type="text/javascript"><!--
-var module_row = <?php echo $module_row; ?>;
 
-function addModule() {	
-	html  = '<tbody id="module-row' + module_row + '">';
-	html += '  <tr>';	
-	html += '    <td class="left"><select name="helloworld_module[' + module_row + '][layout_id]">';
-	<?php foreach ($layouts as $layout) { ?>
-	html += '      <option value="<?php echo $layout['layout_id']; ?>"><?php echo $layout['name']; ?></option>';
-	<?php } ?>
-	html += '    </select></td>';
-	html += '    <td class="left"><select name="helloworld_module[' + module_row + '][position]">';
-	html += '      <option value="content_top"><?php echo $text_content_top; ?></option>';
-	html += '      <option value="content_bottom"><?php echo $text_content_bottom; ?></option>';
-	html += '      <option value="column_left"><?php echo $text_column_left; ?></option>';
-	html += '      <option value="column_right"><?php echo $text_column_right; ?></option>';
-	html += '    </select></td>';
-	html += '    <td class="left"><select name="helloworld_module[' + module_row + '][status]">';
-    html += '      <option value="1" selected="selected"><?php echo $text_enabled; ?></option>';
-    html += '      <option value="0"><?php echo $text_disabled; ?></option>';
-    html += '    </select></td>';
-	html += '    <td class="right"><input type="text" name="helloworld_module[' + module_row + '][sort_order]" value="" size="3" /></td>';
-	html += '    <td class="left"><a onclick="$(\'#module-row' + module_row + '\').remove();" class="button"><span><?php echo $button_remove; ?></span></a></td>';
-	html += '  </tr>';
-	html += '</tbody>';
-	
-	$('#module tfoot').before(html);
-	
-	module_row++;
-}
 //--></script> 
 <?php echo $footer; ?>

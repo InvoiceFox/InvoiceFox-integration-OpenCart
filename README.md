@@ -1,48 +1,48 @@
-##OpenCart InvoiceFox integration
+##Cebelca.biz modul za OpenCart 1.5.x
 
-This is a first version of OpenCart plugin that automatically adds clients and creates invoices every time your OpenCart orders are marked "Complete" (for example).
+###Kaj omogoča
 
-###Status
+Povezava vašega OpenCart sistema s Cebelca.biz omogoča:
+ - administracijski vmesnik v OpenCartu
+ - prenos računov in strank
+ - tiskanje CebelcaUPN računov kar preko OpenCart sistema
+ - tiskanje Cebelca računov kar preko OpenCart sistema
+ - avtomatsko dodajanje računov pod “Plačane” na Cebelci kar preko OpenCart-a
 
-The first alpha version.
+###Namestitev
 
-###Install & setup
+ - za delovanje mora biti na OpenCartu naložen vQmod
+ - naložite datoteke na vaš strežnik
+ - v OpenCartu pod “Razširitve” in “Moduli” omogočite “InvoiceFox”
+ - sledite navodilom in vpišite vaše podatke*
+ - dodajte novo tabelo v MySQL bazo**
 
-* Get VQMOD installed to your OpenCart
-* Copy files with full paths to OpenCart root folder
-* Go to *ADMINISTRATION > Extensions > Modules* and press Install at *InvoiceFox Mod*.
-* Edit the $CONF in the ./admin/model/invoicefox/hooks.php. You get your API key in InvoiceFox/Čebelca.biz under *Access/Dostop*.
+###Dodajanje tabele
+Da lahko nekatere funkcije delujejo, morate dodati novo tabelo v MySQL bazo
+(cPanel > phpMyAdmin > kliknete na bazo > zavihek “SQL”).
+Ukaz je naslednji.
 
-* To create invoice go to "Admin > Sales > Orders > View (at a specified order) > History" and set order status to "Complete". 
-  The invoice will be created and comment about this will be added to history.
+CREATE TABLE IF NOT EXISTS `oc_invoicefox` (
+  `id` int(11) unsigned NOT NULL,
+  `invoicefox_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `status` enum('active','deleted') NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
-###General config
 
-* Get tha API key from the program and enter it (API_KEY)
-* Set the right domain (API_DOMAIN)
-* Choose what documents to make (document_to_make)
-* Choose what the default payment period should be for the customers that get added  (customer_general_payment_period)
-* Decide if you want documents to have document numbers provided by opencart or the program (use_shop_document_numbers)
-* Decide on which status do you want the document created (create_invfox_document_on_status). Go to "Admin > Sales > Orders > View (at a specified order) > History" to see the possible statuses.
+###Vprašanja
 
-###Creating the the inventory sales document
+Za vprašanja se lahko obrnete na
+podpora@cebelca.biz ali matej@koren.eu
 
-* To get the Warehouse ID (in case you create Inventory sales documents out of orders) go to InvoiceFox/Cebelca > Inventory > Warehouses and click on Inventory/Zaloga at selected warehouse. Look at and URL where ?wh=X (where X is warehouse id)
-* The program finds items on the document based on product SKU in OpenCart.
+###Kje plugin deluje
 
-###Creating the proforma invoice
+http://www.cebelca.biz , http://www.invoicefox.com , http://www.invoicefox.co.nz
 
-* Select the number of days the proforma is valid (proforma_days_valid)
 
-###Where does this plugin work
+###Avtorji
 
-http://www.invoicefox.com , http://www.cebelca.biz , www.invoicefox.co.nz , www.invoicefox.com.au , www.abelie.biz
+originalni modula: REFAKTOR d.o.o. / Cebelca.biz
+nadgradnja modula: KULER d.o.o. / Koren.eu
 
-###Feature requests
-
-Email me at janko.itm@gmail.com
-
-###License
-
-GNU GPL v2
 

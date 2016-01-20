@@ -3,7 +3,7 @@
 	<version>0.0.1</version>
 	<vqmver>2.2.1</vqmver>
 	<author>Refaktor Labs, Janko Metelko</author>
-        <file name="admin/view/template/common/footer.tpl" error="skip">
+    <file name="admin/view/template/common/footer.tpl" error="skip">
 		<operation error="skip">
 			<search position="replace"><![CDATA[
                             <?php echo $text_footer; ?>
@@ -31,7 +31,69 @@
 				]]>
 			</add>
 		</operation>
-        </file>   
+
+		<operation error="skip">
+	    <search position="before"><![CDATA[
+				$this->template = 'sale/order_history.tpl';
+	    ]]>
+	    </search>
+			<add trim="false"><![CDATA[                          
+               //$id = $this->model_sale_order->getInvoicefoxId($this->request->get['order_id']);
+				
+				$this->data['invoiceurl'] = $this->url->link('module/invoicefox/print_invoice', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'] . '&hstyle=basicVER3', 'SSL');
+
+				$this->data['upninvoiceurl'] = $this->url->link('module/invoicefox/print_invoice', 'token=' . $this->session->data['token'] . '&order_id=' . $this->request->get['order_id'] . '&hstyle=basicVER3UPN', 'SSL');
+
+
+				]]>
+			</add>
+		</operation>
+
+    </file>  
+	 <file name="admin/model/sale/order.php" error="skip">
+	  <operation error="skip">
+	    <search position="before"><![CDATA[
+			public function getTotalEmailsByProductsOrdered($products) {
+	    ]]>
+	    </search>
+			<add trim="false"><![CDATA[                          
+                   public function getInvoicefoxId($order_id) {
+						$order_query = $this->db->query("SELECT * FROM `" . DB_PREFIX . "invoicefox` o WHERE o.order_id = '" . (int)$order_id . "'");
+
+						if ($order_query->num_rows) {
+							return $order_query->row['invoicefox_id'];
+						}
+						return '';
+					}
+
+					public function insertInvoicefoxId($order_id,$invoicefox_id) {						
+							$this->db->query("INSERT INTO `" . DB_PREFIX . "invoicefox` SET order_id = '" . $this->db->escape($order_id) . "', invoicefox_id = '" . $invoicefox_id . "'");
+
+							//$order_id = $this->db->getLastId();
+					}
+
+				]]>
+			</add>
+		</operation>
+     </file> 
+	 
+	 <file name="admin/view/template/sale/order_history.tpl" error="skip">
+		<operation error="skip">
+			<search position="after"><![CDATA[
+                <?php foreach ($histories as $history) { ?>
+				]]>
+			</search>
+			<add trim="true"><![CDATA[
+				<?php
+				if(preg_match('/- invoice #(.*)was created/is',$history['comment'])){
+					$history['comment'].="<br /><a href='".$invoiceurl."' target='_blank' class='button'>Print</a> <a href='".$upninvoiceurl."' target='_blank' class='button'>Print UPN</a>";
+				}
+				?>
+			]]>
+			</add>
+		</operation>
+	</file>
+	
 	<!--file name="admin/model/sale/order.php" error="skip">
 	  <operation error="skip">
 	    <search position="after"><![CDATA[

@@ -28,7 +28,10 @@ class StrpcAPI {
       "Connection: close\r\n\r\n";
     
     $result = '';
-    $fp = fsockopen ("ssl://{$this->domain}", 443, $errno, $errstr, 30);
+	if(preg_match('/ww2/is',$this->domain))
+		$fp = fsockopen ("{$this->domain}", 80, $errno, $errstr, 30);
+	else
+		$fp = fsockopen ("ssl://{$this->domain}", 443, $errno, $errstr, 30);
     if (!$fp) {
       call_user_func($this->debugHook, "HTTP Error");
     } else {

@@ -25,37 +25,43 @@ class ModelInvoiceFoxHooks extends Model {
     parent::__construct($registry);
 
 
-
+   
     // THE MYCONFIGURATION
-
+	$invoicefox_use_shop_document_numbers = ($this->config->get('invoicefox_use_shop_document_numbers')=="1")?true:false;
+	$invoicefox_add_post_content_in_item_descr = ($this->config->get('invoicefox_add_post_content_in_item_descr')=="1")?true:false;
+	$display_partial_sum_label = ($this->config->get('invoicefox_display_partial_sum_label')=="1")?true:false;
+	$display_product_option_label = ($this->config->get('invoicefox_display_product_option_label')=="1")?true:false;
+	
     $this->CONF = array(
 			// you get it in InvoiceFox/Cebelca/Abelie/..., on page "access" after you activate the API
-			'API_KEY'=>"59z**********************************b8r",
+			'API_KEY'=>$this->config->get('invoicefox_api_key'),
 			// options: "www.invoicefox.com" "www.invoicefox.co.uk" "www.invoicefox.com.au" "www.cebelca.biz" "www.abelie.biz" 
-			'API_DOMAIN'=>"www.cebelca.biz", 
-			'APP_NAME'=>"Cebelca.biz",
+			'API_DOMAIN'=>$this->config->get('invoicefox_api_domain'),
+			'APP_NAME'=>$this->config->get('invoicefox_app_name'),
 			// options: "invoice" "proforma" "inventory"
-			'document_to_make'=>"inventory",
-			'proforma_days_valid'=>10,
-			'customer_general_payment_period'=>5,
-			'add_post_content_in_item_descr'=>false,
+			'document_to_make'=>$this->config->get('invoicefox_document_to_make'),
+			'proforma_days_valid'=>$this->config->get('invoicefox_proforma_days_valid'),
+			'customer_general_payment_period'=>$this->config->get('invoicefox_customer_general_payment_period'),
+			'add_post_content_in_item_descr'=>$invoicefox_add_post_content_in_item_descr,
 			// Leave empty for NO 'partial sum' line
-			'partial_sum_label'=>'Skupaj',
-			'round_calculated_taxrate_to'=>1,
-			'round_calculated_netprice_to'=>3,
+			'partial_sum_label'=>$this->config->get('invoicefox_partial_sum_label'),
+			'display_partial_sum_label'=>$display_partial_sum_label,
+			'display_product_option_label'=>$display_product_option_label,
+			'round_calculated_taxrate_to'=>$this->config->get('invoicefox_round_calculated_taxrate_to'),
+			'round_calculated_netprice_to'=>$this->config->get('invoicefox_round_calculated_netprice_to'),
 			// Find the ID of the InvoiceFox inventory this goes out (look at README)
-			'from_warehouse_id'=>3,
-			'tax_rate_on_shipping'=>17.5,
+			'from_warehouse_id'=>$this->config->get('invoicefox_from_warehouse_id'),
+			'tax_rate_on_shipping'=>$this->config->get('invoicefox_tax_rate_on_shipping'),
 			// Use the opencart ID for document number or the InvoiceFox/Cebelca system
-			'use_shop_document_numbers'=>false,
+			'use_shop_document_numbers'=>$invoicefox_use_shop_document_numbers,
 			// You can change this, look at avaliable statuses at "Sales > Orders > View > History"
-			'create_invfox_document_on_status'=>'Processed'
+			'create_invfox_document_on_status'=>$this->config->get('invoicefox_create_invfox_document_on_status'),
+			'close_invfox_document_on_status'=>$this->config->get('invoicefox_close_invfox_document_on_status'),
 			);
     
 
     // END OF THE MYCONFIGURATION
 
-    
 
   }
   
@@ -63,17 +69,32 @@ class ModelInvoiceFoxHooks extends Model {
 
     $newComment = '';
     error_log("IN ORDER STATUS HOOK", E_USER_ERROR);
-
+	
+	$this->load->model('sale/order');
     $this->load->model('localisation/order_status');
     
     $order_status_info = $this->model_localisation_order_status->getOrderStatus($status_id);
     if ($order_status_info){ $data['order_status'] = $order_status_info['name']; } else { $data['order_status'] = ''; }
     
     opencart_invfox__trace($data['order_status']);
-
-    if ($data['order_status'] == $this->CONF['create_invfox_document_on_status']) {
+	
+	$invoicefox_id = $this->model_sale_order->getInvoicefoxId($order_id); 
+    if ($data['order_status'] == $this->CONF['create_invfox_document_on_status'] && $invoicefox_id=='') {
       
       $newComment = $this->makeInvoiceFromOrder($order_id);
+      
+      error_log("IN ORDER STATUS HOOK END", E_USER_ERROR);
+    }
+
+	if ($data['order_status'] == $this->CONF['close_invfox_document_on_status']) {
+      
+      $api = new InvfoxAPI($this->CONF['API_KEY'], $this->CONF['API_DOMAIN'], true);
+      $api->setDebugHook("opencart_invfox__trace");
+	  
+	  $this->load->model('sale/order');
+	  $order = $this->model_sale_order->getOrder($order_id);
+	  $invoice_no = $this->CONF['use_shop_document_numbers'] ? $order['invoice_prefix'] . $order['order_id'] : '-';
+	  $r = $api->markInvoicePaid($order['order_id']);
       
       error_log("IN ORDER STATUS HOOK END", E_USER_ERROR);
     }
@@ -87,9 +108,7 @@ class ModelInvoiceFoxHooks extends Model {
 
   private function makeInvoiceFromOrder($order_id) {
 
-    //// print_r($this->CONF);
-
-    $comment = '';
+	$comment = '';
 
     $data = array();
     
@@ -106,7 +125,7 @@ class ModelInvoiceFoxHooks extends Model {
       $api->setDebugHook("opencart_invfox__trace");
   
       opencart_invfox__trace("============ INVFOX::begin ===========");
-
+		
       $r = $api->assurePartner(array(
 				     'name' => $order['payment_firstname']." ".$order['payment_lastname'].($order['payment_company']?", ":"").$order['payment_company'],
 				     'street' => $order['payment_address_1']."\n". $order['payment_address_2'],
@@ -142,30 +161,49 @@ class ModelInvoiceFoxHooks extends Model {
 	$data['products'] = array();
 
 	$products = $this->model_sale_order->getOrderProducts($order_id);
-      
 	$body2 = array();
-
+	$subtotal = 0;
+	$producttax = 0;
 	foreach( $products as $product ) {
-	  $productMore = $this->model_catalog_product->getProduct($product['product_id']);
+	  $productMore = $this->model_catalog_product->getProduct($product['order_product_id']);
+	  
+	  $product_options_text='';
+	  if($this->CONF['display_product_option_label']){
+		$product_options = $this->model_sale_order->getOrderOptions($order_id, $product['order_product_id']);
+		if($product_options)
+			foreach($product_options as $product_option){
+				$product_options_text .= $product_option['name']. ':'.$product_option['value']."\n";
+			}
+	  }
+	  $subtotal = $subtotal + round($product['price'], 2);
 	  opencart_invfox__trace($product,0);
 	  $body2[] = array(
-			   'code' => $productMore['sku'],
-			   'title' => $product['name']." ".$product['model'],// $product->post->post_title.($this->CONF['add_post_content_in_item_descr']?"\n".$product->post->post_content:""),
+			   'code' => isset($productMore['sku'])?$productMore['sku']:'',
+			   'title' => $product['name']." ".$product['model']."\n".$product_options_text,// $product->post->post_title.($this->CONF['add_post_content_in_item_descr']?"\n".$product->post->post_content:""),
 			   'qty' => $product['quantity'],
 			   'mu' => '',
 			   'price' => round($product['price'], 2),
 			   'vat' => round($product['tax'] / $product['price'] * 100, $this->CONF['round_calculated_taxrate_to']),
 			   'discount' => 0
 			   );
+	  $producttax = round($product['tax'] / $product['price'] * 100, $this->CONF['round_calculated_taxrate_to']);
 	}
-	
+
 	$shipping = $this->findShipping($this->model_sale_order->getOrderTotals($order_id));
+	$coupon = $this->findCoupon($this->model_sale_order->getOrderTotals($order_id));
 	
 	if ($this->CONF['document_to_make'] != 'inventory' && $shipping['value'] > 0) {
 	  
 	  if ($shipping) {
 	    opencart_invfox__trace("============ INVFOX:: adding shipping ============");
-	    if ($this->CONF['partial_sum_label']) {
+	    
+		$discount = 0;
+		if ($coupon) {
+			$discount = $coupon['value'];
+		}
+		
+		/*
+		if ($this->CONF['partial_sum_label'] && $this->CONF['display_partial_sum_label']) {
 	      $body2[] = array(
 			       'title' => "= ".$this->CONF['partial_sum_label'],
 			       'qty' => 1,
@@ -175,13 +213,26 @@ class ModelInvoiceFoxHooks extends Model {
 			       'discount' => 0
 			       );
 	    }
+		*/
+		
 	    
 	    $body2[] = array(
 			     'title' => $shipping['title'],
 			     'qty' => 1,
 			     'mu' => '',
 			     'price' => $shipping['value'],
-			     'vat' => $this->CONF['tax_rate_on_shipping'], //round($order->order_shipping_tax / $order->order_shipping * 100,  $this->CONF['round_calculated_taxrate_to']),
+			     'vat' => $this->CONF['tax_rate_on_shipping'], //round($order->order_shipping_tax / $order->order_shipping * 100, $this->CONF['round_calculated_taxrate_to']),
+			     'discount' => 0
+			     );
+	  }
+	  if ($coupon) {
+		  //$couponvat = round($product['tax'] / $coupon['value'] * 100, $this->CONF['round_calculated_taxrate_to']);
+		  $body2[] = array(
+			     'title' => $coupon['title'],
+			     'qty' => 1,
+			     'mu' => '',
+			     'price' => $coupon['value'],
+			     'vat' =>$producttax,
 			     'discount' => 0
 			     );
 	  }
@@ -191,65 +242,73 @@ class ModelInvoiceFoxHooks extends Model {
       opencart_invfox__trace("============ INVFOX::before create invoice call ============");
 
       // TODO -- it can make it's own INVOICENUMS OR INVFOX CAN MAKE THEM
-
-      $invoice_no = $this->CONF['use_shop_document_numbers'] ? $order['invoice_prefix'] . $order['order_id'] : '-';
-
+	 
+      $invid = $this->CONF['use_shop_document_numbers'] ? $order['invoice_prefix'] . $order['order_id'] : '';
+	  $invoice_no = $order['invoice_prefix'] . $order['order_id'] ;
       opencart_invfox__trace($invoice_no);
       
       if ($this->CONF['document_to_make'] == 'invoice') {
-
-	$r2 = $api->createInvoice(
-				  array(
-					'title' => $invoice_no,
-					'date_sent' => $date1,
-					'date_to_pay' => $date1,
-					'date_served' => $date1, // MAY NOT BE NULL IN SOME VERSIONS OF USER DBS
-					'id_partner' => $clientId,
-					'taxnum' => '-',
-					'doctype' => 0
-					),
-				  $body2
-				  );
-	if ($r2->isOk()) {    
-	  $invA = $r2->getData();
-	  $comment .= "- invoice # {$invA[0]['title']} was created at {$this->CONF['APP_NAME']}.";
-	} 
-
-      } elseif ($this->CONF['document_to_make'] == 'proforma') {
-	$r2 = $api->createProFormaInvoice(
+		$r2 = $api->createInvoice(
 					  array(
-						'title' => $invoice_no,
+						'title' => $invid,
 						'date_sent' => $date1,
-						'days_valid' => $this->CONF['proforma_days_valid'],
+						'date_to_pay' => $date1,
+						'date_served' => $date1, // MAY NOT BE NULL IN SOME VERSIONS OF USER DBS
 						'id_partner' => $clientId,
-						'taxnum' => '-'
+						'taxnum' => '-',
+						'doctype' => 0,
+						'id_document_ext' => $order['order_id'],
+						 'pub_notes' => $invoice_no
 						),
 					  $body2
 					  );
-	if ($r2->isOk()) {    
-	  $invA = $r2->getData();
-	  $comment .= "- pro forma invoice # {$invA[0]['title']} was created at {$this->CONF['APP_NAME']}.";
-	} 
+
+
+		if ($r2->isOk()) {    
+		  $invA = $r2->getData();
+		  $this->model_sale_order->insertInvoicefoxId($order_id,$invA[0]['id']);
+		  $comment .= "- invoice # {$invA[0]['title']} was created at {$this->CONF['APP_NAME']}.";
+		} 
+
+      } elseif ($this->CONF['document_to_make'] == 'proforma') {
+			$r2 = $api->createProFormaInvoice(
+							  array(
+								'title' => $invoice_no,
+								'date_sent' => $date1,
+								'days_valid' => $this->CONF['proforma_days_valid'],
+								'id_partner' => $clientId,
+								'taxnum' => '-',
+								 'pub_notes' => $invoice_no
+								),
+							  $body2
+							  );
+
+
+			if ($r2->isOk()) {    
+			  $invA = $r2->getData();
+			  $comment .= "- pro forma invoice # {$invA[0]['title']} was created at {$this->CONF['APP_NAME']}.";
+			} 
 
       } elseif ($this->CONF['document_to_make'] == 'inventory') {
 
-	$invoice_no = $invoice_no == "-" ? "" : $invoice_no ;
+			$invoice_no = $invoice_no == "-" ? "" : $invoice_no ;
 
-	$r2 = $api->createInventorySale(
-					array(
-					      'docnum' => $invoice_no,
-					      'date_created' => $date1,
-					      'id_contact_to' => $clientId,
-					      'id_contact_from' => $this->CONF['from_warehouse_id'],
-					      'taxnum' => '-',
-					      'doctype' => 1
-					      ),
-					$body2
-					);
-	if ($r2->isOk()) {    
-	  $invA = $r2->getData();
-	  $comment .= "Inventory sales document No. {$invA[0]['docnum']} was created at {$this->CONF['APP_NAME']}.";
-	} 
+			$r2 = $api->createInventorySale(
+							array(
+								  'docnum' => $invoice_no,
+								  'date_created' => $date1,
+								  'id_contact_to' => $clientId,
+								  'id_contact_from' => $this->CONF['from_warehouse_id'],
+								  'taxnum' => '-',
+								  'doctype' => 1,
+								   'pub_notes' => $invoice_no
+								  ),
+							$body2
+							);
+			if ($r2->isOk()) {    
+			  $invA = $r2->getData();
+			  $comment .= "Inventory sales document No. {$invA[0]['docnum']} was created at {$this->CONF['APP_NAME']}.";
+			} 
       }
       opencart_invfox__trace($r2);
       opencart_invfox__trace("============ INVFOX::after create invoice ============");
@@ -266,5 +325,48 @@ class ModelInvoiceFoxHooks extends Model {
     }
     return null;
   }
+
+  private function findCoupon($totals) {
+    foreach ($totals as $total) {
+      if ($total['code'] == 'coupon') {
+			return $total;
+      }
+    }
+    return null;
+  }
+
+
+  
+  
+  public function downloadPDF($id, $path, $res='invoice-sent',$hstyle='basicVER3'){
+		$this->load->model('sale/order');
+		$this->load->model('catalog/product');
+
+		$api = new InvfoxAPI($this->CONF['API_KEY'], $this->CONF['API_DOMAIN'], true);
+		$api->downloadPDF($id,$res,$hstyle);
+    
+		//$order = $this->model_sale_order->getOrder($order_id);
+    
+  }
+
+  public function printInvoice($order_id, $res='invoice-sent',$hstyle='basicVER3'){
+		$this->load->model('sale/order');
+		$this->load->model('catalog/product');
+		
+		if($order_id){
+			$api = new InvfoxAPI($this->CONF['API_KEY'], $this->CONF['API_DOMAIN'], true);
+			$api->printInvoice($order_id,$res,$hstyle);
+		}
+		else{
+			echo "Error : There is no invoice generated";
+		}
+    
+		//$order = $this->model_sale_order->getOrder($order_id);
+    
+  }
+
+  
+
+  
     
 }

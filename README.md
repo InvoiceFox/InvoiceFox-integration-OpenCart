@@ -43,7 +43,7 @@ http://www.cebelca.biz , http://www.invoicefox.com , http://www.invoicefox.co.nz
 
 ###Avtorji
 
-originalni modula: REFAKTOR d.o.o. / Cebelca.biz
+originalni modul: REFAKTOR d.o.o. / Cebelca.biz
 
 nadgradnja modula: KULER d.o.o. / Koren.eu
 

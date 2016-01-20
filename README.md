@@ -22,7 +22,8 @@ Da lahko nekatere funkcije delujejo, morate dodati novo tabelo v MySQL bazo
 (cPanel > phpMyAdmin > kliknete na bazo > zavihek “SQL”).
 Ukaz je naslednji.
 
-```CREATE TABLE IF NOT EXISTS `oc_invoicefox` (
+```
+CREATE TABLE IF NOT EXISTS `oc_invoicefox` (
   `id` int(11) unsigned NOT NULL,
   `invoicefox_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,

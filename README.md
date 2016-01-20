@@ -22,13 +22,12 @@ Da lahko nekatere funkcije delujejo, morate dodati novo tabelo v MySQL bazo
 (cPanel > phpMyAdmin > kliknete na bazo > zavihek “SQL”).
 Ukaz je naslednji.
 
-CREATE TABLE IF NOT EXISTS `oc_invoicefox` (
-  `id` int(11) unsigned NOT NULL,
-  `invoicefox_id` int(11) NOT NULL,
-  `order_id` int(11) NOT NULL,
-  `status` enum('active','deleted') NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
-
+  CREATE TABLE IF NOT EXISTS `oc_invoicefox` (
+    `id` int(11) unsigned NOT NULL,
+    `invoicefox_id` int(11) NOT NULL,
+    `order_id` int(11) NOT NULL,
+    `status` enum('active','deleted') NOT NULL
+  ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 ###Vprašanja
 
@@ -43,6 +42,7 @@ http://www.cebelca.biz , http://www.invoicefox.com , http://www.invoicefox.co.nz
 ###Avtorji
 
 originalni modula: REFAKTOR d.o.o. / Cebelca.biz
+
 nadgradnja modula: KULER d.o.o. / Koren.eu
 
 

@@ -38,6 +38,49 @@ class InvfoxAPI {
     return $res;
   }
 
+  /*
+  * finalizes the invoice
+  * 
+  * $header['id']=$invId; // invoice Id
+  * $header['id_register'] = 1; // id of register
+  * $header['fiscalize'] = 1;  // should fiscalize or not / cash invoice or not (send to FURS / Tax Office)
+  * $header['id_location'] = 1; // id of location
+  * $header['op-tax-id'] = "12345678"; // personal tax number of the issuer
+  * $header['op-name'] = "Andrej"; // name or label of the issuer
+  *
+  * 
+  * returns: [[{"docnum":"P1-B1-42","eor":"443d18e9-0f0a-48a6-a27d-7fcea373ef88"}]]
+  */
+
+  function finalizeInvoice($header)
+  {
+	$res = $this->api->call('invoice-sent', 'finalize-invoice', $header);
+	if ($res->isErr()) {
+		echo 'error' . $res->getErr();
+	} else {
+		$resD = $res->getData();
+		return $resD;
+	}
+  }
+  
+  /*
+  * gets fiscal info of invoice (EOR, ZOI, QR code)
+  * id // id of invoice 
+  *
+  * returns: [[{"id":80,"tax_id":"10217177","operator_tax_id":"12345678","invoice_amount":1440.0,"location_id":"P1","register_id":"B1","zoi_code":"ad3d87a26aab4a6d5a81c8cfae4b2bac","zoi_code_dec":"230275924372432379612582134529131228076","bar_code":"230275924372432379612582134529131228076102171771512240025088","eor_code":"443d18e9-0f0a-48a6-a27d-7fcea373ef88","date_time":"2015-12-24T00:25:08","operator_name":"PRODAJALEC1"}]]
+  */
+  
+  function getFiscalInfo($id) {
+	$res = $this->api->call('invoice-sent', 'get-fiscal-info', array('id' => $id));
+	if ($res->isErr()) {
+		echo 'error' . $res->getErr();
+		return false;
+	} else {
+		$resD = $res->getData();
+		return $resD;
+	}
+  }
+
   function createProFormaInvoice($header, $body) {
     $res = $this->api->call('preinvoice', 'insert-smart', $header);
     //		print_r($res);

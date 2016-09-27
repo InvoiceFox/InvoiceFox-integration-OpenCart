@@ -1,4 +1,4 @@
-##Cebelca.biz modul za OpenCart 1.5.x
+##Cebelca.biz modul za OpenCart
 
 ###Kaj omogoča
 

@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS `oc_invoicefox` (
 ###Vprašanja
 
 Za vprašanja se lahko obrnete na
+
 podpora@cebelca.biz ali matej@koren.eu
 
 ###Kje plugin deluje
@@ -45,6 +46,4 @@ http://www.cebelca.biz , http://www.invoicefox.com , http://www.invoicefox.co.nz
 
 originalni modul: REFAKTOR d.o.o. / Cebelca.biz
 
-nadgradnja modula: KULER d.o.o. / Koren.eu
-
-
+nadgradnja modula + dodatne verzije: KULER d.o.o. / Koren.eu

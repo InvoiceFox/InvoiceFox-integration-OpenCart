@@ -170,6 +170,22 @@ class InvfoxAPI {
 		return $resD;
 	}
   }
+  
+  // header should be array with keys
+  // id (invoice ID)
+  // title (empty for program to automatically fill with the next one)
+  // doctype (0 for invoices)
+  // returns for example: [{"new_title":"18-0005"}]
+  function finalizeInvoiceNonFiscal($header)
+  {
+	$res = $this->api->call('invoice-sent', 'finalize-invoice-2015', $header);
+	if ($res->isErr()) {
+		echo 'error' . $res->getErr();
+	} else {
+		$resD = $res->getData();
+		return $resD;
+	}
+  }
 
   function getFiscalInfo($id) {
 	$res = $this->api->call('invoice-sent', 'get-fiscal-info', array('id' => $id));

@@ -42,9 +42,8 @@ class InvfoxAPI {
   * finalizes the invoice
   * 
   * $header['id']=$invId; // invoice Id
-  * $header['id_register'] = 1; // id of register
   * $header['fiscalize'] = 1;  // should fiscalize or not / cash invoice or not (send to FURS / Tax Office)
-  * $header['id_location'] = 1; // id of location
+  * $header['id_location'] = 1; // id of location 
   * $header['op-tax-id'] = "12345678"; // personal tax number of the issuer
   * $header['op-name'] = "Andrej"; // name or label of the issuer
   *

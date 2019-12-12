@@ -174,7 +174,12 @@ class ModelInvoiceFoxHooks extends Model {
       $api->setDebugHook("opencart_invfox__trace");
   
       opencart_invfox__trace("============ INVFOX::begin ===========");
-		
+
+      $vatid = ""; // TODO
+	    
+      $name = ($vatid == "" ? $order['payment_firstname']." ".$order['payment_lastname'] : "") .
+	      ($order['payment_company']?", ":"").$order['payment_company'];
+	    
       $r = $api->assurePartner(array(
 				     'name' => $order['payment_firstname']." ".$order['payment_lastname'].($order['payment_company']?", ":"").$order['payment_company'],
 				     'street' => $order['payment_address_1']."\n". $order['payment_address_2'],

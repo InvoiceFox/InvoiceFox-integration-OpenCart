@@ -1,0 +1,324 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-module" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+      </div>
+      <div class="panel-body">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-module" class="form-horizontal">
+	  <div class="form-group">
+            <label class="col-sm-2 control-label" for="invoicefox_api_key">{{ entry_api_key }}</label>
+            <div class="col-sm-10">
+              <input id="invoicefox_api_key" type="text" name="invoicefox_api_key" value="{{ invoicefox_api_key }}" placeholder="{{ entry_api_key }}" id="input-name" class="form-control" />
+	      {% if error_api_key %}
+              <div class="text-danger">{{ error_api_key }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="invoicefox_api_domain">{{ entry_api_domain }}</label>
+            <div class="col-sm-10"><select id="invoicefox_api_domain" name="invoicefox_api_domain"  class="form-control">
+                  {% if invoicefox_api_domain=='www.invoicefox.com' %}
+			<option selected="selected" value="www.invoicefox.com">www.invoicefox.com</option>
+		  {% else %}
+			<option value="www.invoicefox.com">www.invoicefox.com</option>
+		  {% endif %}
+
+		  {% if invoicefox_api_domain=='www.invoicefox.co.uk' %}
+			<option selected="selected" value="www.invoicefox.co.uk">www.invoicefox.co.uk</option>
+		  {% else %}
+			<option value="www.invoicefox.co.uk">www.invoicefox.co.uk</option>
+		  {% endif %}
+
+		  {% if invoicefox_api_domain=='www.invoicefox.com.au' %}
+			<option selected="selected" value="www.invoicefox.com.au">www.invoicefox.com.au</option>
+		  {% else %}
+			<option value="www.invoicefox.com.au">www.invoicefox.com.au</option>
+		  {% endif %}
+
+		  {% if invoicefox_api_domain=='www.cebelca.biz' %}
+			<option selected="selected" value="www.cebelca.biz">www.cebelca.biz</option>
+		  {% else %}
+			<option value="www.cebelca.biz">www.cebelca.biz</option>
+		  {% endif %}
+
+		  {% if invoicefox_api_domain=='ww2.cebelca.biz' %}
+			<option selected="selected" value="ww2.cebelca.biz">ww2.cebelca.biz</option>
+		  {% else %}
+			<option value="ww2.cebelca.biz">ww2.cebelca.biz</option>
+		  {% endif %}
+
+		  {% if invoicefox_api_domain=='test.cebelca.biz' %}
+			<option selected="selected" value="test.cebelca.biz">test.cebelca.biz</option>
+		  {% else %}
+			<option value="test.cebelca.biz">test.cebelca.biz</option>
+		  {% endif %}
+
+		  {% if invoicefox_api_domain=='www.abelie.biz' %}
+			<option selected="selected" value="www.abelie.biz">www.abelie.biz</option>
+		  {% else %}
+			<option value="www.abelie.biz">www.abelie.biz</option>
+		  {% endif %}
+
+                </select>
+	    </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="invoicefox_app_name">{{ entry_app_name }}</label>
+            <div class="col-sm-10"><input id="invoicefox_app_name" type="text" name="invoicefox_app_name" value="{{ invoicefox_app_name }}"  class="form-control"/>
+	     {% if error_app_name %}
+              <span class="error">{{ error_app_name }}</span>
+              {% endif %}
+	    </div>
+          </div>
+
+	  <div class="form-group">
+            <label class="col-sm-2 control-label" for="invoicefox_document_to_make">{{ entry_document_to_make }}</label>
+            <div class="col-sm-10"><select id="invoicefox_document_to_make" name="invoicefox_document_to_make"  class="form-control">
+                  {% if invoicefox_document_to_make=='invoice' %}
+			<option selected="selected" value="invoice">invoice</option>
+		  {% else %}
+			<option value="invoice">invoice</option>
+		  {% endif %}
+
+		  {% if invoicefox_document_to_make=='proforma' %}
+			<option selected="selected" value="proforma">proforma</option>
+		  {% else %}
+			<option value="proforma">proforma</option>
+		  {% endif %}
+		  
+		  {% if invoicefox_document_to_make=='inventory' %}
+			<option selected="selected" value="inventory">inventory</option>
+		  {% else %}
+			<option value="inventory">inventory</option>
+		  {% endif %}
+
+		  
+                </select>
+	    </div>
+          </div>
+	
+	  <div class="form-group">
+            <label class="col-sm-2 control-label" for="invoicefox_proforma_days_valid">{{ entry_proforma_days_valid }}</label>
+            <div class="col-sm-10"><input id="invoicefox_proforma_days_valid" type="text" name="invoicefox_proforma_days_valid" value="{{ invoicefox_proforma_days_valid }}"  class="form-control"/>
+	     {% if error_proforma_days_valid %}
+              <span class="text-danger">{{ error_proforma_days_valid }}</span>
+             {% endif %}
+	    </div>
+          </div>
+	  
+	  <div class="form-group">
+            <label class="col-sm-2 control-label" for="invoicefox_customer_general_payment_period">{{ entry_customer_general_payment_period }}</label>
+            <div class="col-sm-10"><input id="invoicefox_customer_general_payment_period" type="text" name="invoicefox_customer_general_payment_period" value="{{ invoicefox_customer_general_payment_period }}"  class="form-control"/>
+	     {% if error_customer_general_payment_period %}
+              <span class="text-danger">{{ error_customer_general_payment_period }}</span>
+              {% endif %}
+	    </div>
+          </div>
+	  <!--
+	  <div class="form-group">
+            <label class="col-sm-2 control-label" for="invoicefox_add_post_content_in_item_descr">{{ entry_add_post_content_in_item_descr }}</label>
+            <div class="col-sm-10"><select id="invoicefox_add_post_content_in_item_descr" name="invoicefox_add_post_content_in_item_descr"  class="form-control">
+                  {% if invoicefox_add_post_content_in_item_descr=='true' %}
+			<option selected="selected" value="true">true</option>
+		  {% else %}
+			<option value="true">true</option>
+		  {% endif %}
+
+		  {% if invoicefox_add_post_content_in_item_descr=='false' %}
+			<option selected="selected" value="false">false</option>
+		  {% else %}
+			<option value="false">false</option>
+		  {% endif %}
+
+		  
+                </select>
+	    </div>
+          </div>
+	  -->
+	  <div class="form-group">
+            <label class="col-sm-2 control-label" for="invoicefox_add_post_content_in_item_descr">{{ entry_display_product_option_label }}</label>
+            <div class="col-sm-10"><select id="invoicefox_add_post_content_in_item_descr" name="invoicefox_add_post_content_in_item_descr"  class="form-control">
+                  {% if invoicefox_add_post_content_in_item_descr=='1' %}
+			<option selected="selected" value="1">true</option>
+		  {% else %}
+			<option value="1">true</option>
+		  {% endif %}
+
+		  {% if invoicefox_add_post_content_in_item_descr=='0' %}
+			<option selected="selected" value="0">false</option>
+		  {% else %}
+			<option value="0">false</option>
+		  {% endif %}
+
+		  
+                </select>
+	    </div>
+          </div>
+	  
+	  <div class="form-group">
+            <label class="col-sm-2 control-label" for="invoicefox_partial_sum_label">{{ entry_partial_sum_label }}</label>
+            <div class="col-sm-10"><input id="invoicefox_partial_sum_label" type="text" name="invoicefox_partial_sum_label" value="{{ invoicefox_partial_sum_label }}"  class="form-control"/>
+	      {% if error_partial_sum_label %}
+              <span class="text-danger">{{ error_partial_sum_label }}</span>
+              {% endif %}
+	    </div>
+          </div>
+	  
+	  <div class="form-group">
+            <label class="col-sm-2 control-label" for="invoicefox_round_calculated_taxrate_to">{{ entry_round_calculated_taxrate_to }}</label>
+            <div class="col-sm-10"><input id="invoicefox_round_calculated_taxrate_to" type="text"  name="invoicefox_round_calculated_taxrate_to" value="{{ invoicefox_round_calculated_taxrate_to }}"  class="form-control" />
+	    </div>
+          </div>
+
+	  <div class="form-group">
+            <label class="col-sm-2 control-label" for="invoicefox_round_calculated_netprice_to">{{ entry_round_calculated_netprice_to }}</label>
+            <div class="col-sm-10"><input id="invoicefox_round_calculated_netprice_to" type="text" name="invoicefox_round_calculated_netprice_to" value="{{ invoicefox_round_calculated_netprice_to }}"  class="form-control"/>
+	    </div>
+          </div>
+	  
+	  <div class="form-group">
+            <label class="col-sm-2 control-label" for="invoicefox_from_warehouse_id">{{ entry_from_warehouse_id }}</label>
+            <div class="col-sm-10"><input id="invoicefox_from_warehouse_id" type="text" name="invoicefox_from_warehouse_id" value="{{ invoicefox_from_warehouse_id }}"  class="form-control"/>
+	    </div>
+          </div>
+
+	  <div class="form-group">
+            <label class="col-sm-2 control-label" for="invoicefox_tax_rate_on_shipping">{{ entry_tax_rate_on_shipping }}</label>
+            <div class="col-sm-10"><input id="invoicefox_tax_rate_on_shipping" type="text" name="invoicefox_tax_rate_on_shipping" value="{{ invoicefox_tax_rate_on_shipping }}"  class="form-control" />
+	    </div>
+          </div>
+
+	  <div class="form-group">
+            <label class="col-sm-2 control-label" for="invoicefox_use_shop_document_numbers">{{ entry_use_shop_document_numbers }}</label>
+            <div class="col-sm-10"><select id="invoicefox_use_shop_document_numbers" name="invoicefox_use_shop_document_numbers"  class="form-control">
+                  {% if invoicefox_use_shop_document_numbers=='true' %}
+			<option selected="selected" value="true">true</option>
+		  {% else %}
+			<option value="true">true</option>
+		  {% endif %}
+
+		  {% if invoicefox_use_shop_document_numbers=='false' %}
+			<option selected="selected" value="false">false</option>
+		  {% else %}
+			<option value="false">false</option>
+		  {% endif %}
+
+		  
+                </select>
+	    </div>
+          </div>
+
+	   <div class="form-group">
+            <label class="col-sm-2 control-label" for="invoicefox_create_invfox_document_on_status">{{ entry_create_invfox_document_on_status }}</label>
+            <div class="col-sm-10"><select id="invoicefox_create_invfox_document_on_status" name="invoicefox_create_invfox_document_on_status"  class="form-control">
+                  {% for order_status in order_statuses %}
+		  {% if invoicefox_create_invfox_document_on_status==order_status.name %}
+			<option selected="selected" value="{{ order_status.name }}">{{ order_status.name }}</option>
+		  {% else %}
+			<option value="{{ order_status.name }}">{{ order_status.name }}</option>
+		  {% endif %}
+		  {% endfor %}
+
+		  
+                </select>
+	    </div>
+          </div>
+
+	   <div class="form-group">
+            <label class="col-sm-2 control-label" for="invoicefox_close_invfox_document_on_status">{{ entry_close_invfox_document_on_status }}</label>
+            <div class="col-sm-10"><select id="invoicefox_close_invfox_document_on_status"  name="invoicefox_close_invfox_document_on_status"  class="form-control">
+		  {% for order_status in order_statuses %}
+		  {% if invoicefox_close_invfox_document_on_status==order_status.name %}
+			<option selected="selected" value="{{ order_status.name }}">{{ order_status.name }}</option>
+		  {% else %}
+			<option value="{{ order_status.name }}">{{ order_status.name }}</option>
+		  {% endif %}
+		  {% endfor %}
+                </select>
+	    </div>
+          </div>
+
+
+	  <div class="form-group">
+            <label class="col-sm-2 control-label" for="invoicefox_tax_id">{{ entry_tax_id }}</label>
+            <div class="col-sm-10"><input id="invoicefox_tax_id" type="text" name="invoicefox_tax_id" value="{{ invoicefox_tax_id }}"  class="form-control"/>
+	     {% if error_tax_id %}
+              <span class="error">{{ error_tax_id }}</span>
+             {% endif %}
+	    </div>
+          </div>
+
+	  <div class="form-group">
+            <label class="col-sm-2 control-label" for="invoicefox_tax_name">{{ entry_tax_name }}</label>
+            <div class="col-sm-10"><input id="invoicefox_tax_name" type="text" name="invoicefox_tax_name" value="{{ invoicefox_tax_name }}"  class="form-control"/>
+	     {% if error_tax_name %}
+              <span class="error">{{ error_tax_name }}</span>
+             {% endif %}
+	    </div>
+          </div>
+
+	  <div class="form-group">
+            <label class="col-sm-2 control-label" for="invoicefox_tax_location">{{ entry_tax_location }}</label>
+            <div class="col-sm-10"><input id="invoicefox_tax_location" type="text" name="invoicefox_tax_location" value="{{ invoicefox_tax_location }}"  class="form-control"/>
+	      {% if error_tax_location %}
+              <span class="error">{{ error_tax_location }}</span>
+              {% endif %}
+	    </div>
+          </div>
+
+	  <div class="form-group">
+            <label class="col-sm-2 control-label" for="invoicefox_tax_register">{{ entry_tax_register }}</label>
+            <div class="col-sm-10"><input id="invoicefox_tax_register" type="text" name="invoicefox_tax_register" value="{{ invoicefox_tax_register }}"  class="form-control"/>
+	      {% if error_tax_register %}
+              <span class="error">{{ error_tax_register }}</span>
+              {% endif %}
+	    </div>
+          </div>
+
+	   <div class="form-group">
+            <label class="col-sm-2 control-label" for="invoicefox_fiscalize">{{ entry_fiscalize }}</label>
+            <div class="col-sm-10"><select id="invoicefox_fiscalize" name="invoicefox_fiscalize"  class="form-control">
+                  {% if invoicefox_fiscalize=='1' %}
+			<option selected="selected" value="1">true</option>
+		  {% else %}
+			<option value="1">true</option>
+		  {% endif %}
+
+		  {% if invoicefox_fiscalize=='0' %}
+			<option selected="selected" value="0">false</option>
+		  {% else %}
+			<option value="0">false</option>
+		  {% endif %}
+		  
+                </select>
+	    </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{ footer }}

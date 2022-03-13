@@ -97,7 +97,7 @@ class ModelInvoiceFoxHooks extends Model {
       $api = new InvfoxAPI($this->CONF['API_KEY'], $this->CONF['API_DOMAIN'], true);
       $api->setDebugHook("opencart_invfox__trace");
 	  
-	  $this->load->model('sale/order');
+	  $this->load->model('invoicefox/order');
 	  $order = $this->model_invoicefox_order->getOrder($order_id);
 	  // $invoice_no = $this->CONF['use_shop_document_numbers'] ? $order['invoice_prefix'] . $order['order_id'] : '-';
       // $invoice_no = $order['invoice_prefix'] . $order['order_id'] ;
@@ -152,7 +152,6 @@ class ModelInvoiceFoxHooks extends Model {
             if (isset($result['eor'])) {
                 $result['eor']=$r[0]['eor'];
 			}
-			$this->load->model('sale/order');
 			$this->model_sale_order->updateInvoiceFinalized($order_id); 
 			$this->model_sale_order->updateInvoiceDocNum($order_id,$r[0]['docnum']); 
 			
